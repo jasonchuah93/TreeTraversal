@@ -3,57 +3,67 @@
 #include "Print.h"
 #include "Stack.h"
 
+void changeNodeState(Node *curMode){
+	switch(curMode->state){
+		case ENTERED_NODE:
+			curMode->state = VISITED_LEFT_NODE;
+		break;
+		case VISITED_LEFT_NODE:
+			curMode->state = VISITED_RIGHT_NODE;
+		break;
+		default:
+			curMode->state = UNKNOWN_NODE_STATE;
+		break;
+	}
+}
 
 void binaryTreeTraverseInOrder(Node *currentNode){
 	Stack *stack; 
 	stack = stackNew();
-	printf("Created a stack\n");
-	
-	if(currentNode->left == NULL && currentNode->right == NULL){
-		display(currentNode->data);
-		goto here;
-	}
-	else{
-		if(currentNode->left != NULL){
+	while(1){
+		if(currentNode->left == NULL && currentNode->right == NULL){
+			display(currentNode->data);
+			currentNode->state=ENTERED_NODE;
+			goto here;
+		}else if(currentNode->left!=NULL){
+			currentNode->state=ENTERED_NODE;
 			stackPush(stack,currentNode);
 			currentNode=currentNode->left;
+			currentNode->state=ENTERED_NODE;
 			if(currentNode->left == NULL && currentNode->right == NULL){
-				display(currentNode->data);
-				currentNode=stackPop(stack); //pop 10
-			}
-			else{
-				stackPush(stack,currentNode);
-				currentNode=currentNode->left;
-				if(currentNode->left == NULL && currentNode->right == NULL){
-					display(currentNode->data);
-				}
-				currentNode=stackPop(stack); //pop 5 
-				if(currentNode->right!=NULL){
-					stackPush(stack,currentNode);
-					currentNode=currentNode->right;
-					if(currentNode->left == NULL && currentNode->right == NULL){
-						display(currentNode->data);
-					}
-					currentNode=stackPop(stack);
-				}
 				display(currentNode->data);
 				currentNode=stackPop(stack);
+				display(currentNode->data);
+				changeNodeState(currentNode);
 			}
-		}
-		if(currentNode->right != NULL){
-			stackPush(stack,currentNode);//push 10 in again 
-			currentNode=currentNode->right;//go to right
-			if(currentNode->left == NULL && currentNode->right == NULL){
-				display(currentNode->data); // show 20
-			}
+		}else if(currentNode->right!=NULL){
+			display(currentNode->data);
+			currentNode->state=ENTERED_NODE;
+			stackPush(stack,currentNode);
+			currentNode=currentNode->right;
+			currentNode->state=ENTERED_NODE;
+			display(currentNode->data);
 			currentNode=stackPop(stack);
+			
+			currentNode->state=VISITED_RIGHT_NODE;
 		}
-		
-		display(currentNode->data);
+		if(currentNode->state==VISITED_LEFT_NODE){
+			if(currentNode->right!=NULL){
+				stackPush(stack,currentNode);
+				currentNode=currentNode->right;
+				currentNode->state=ENTERED_NODE;
+				display(currentNode->data);
+				currentNode=stackPop(stack);
+			}else{
+				break;
+			}
+		}
+		if(currentNode->state==VISITED_RIGHT_NODE || currentNode->state==VISITED_LEFT_NODE){
+			break;
+		}
 	}
-	currentNode=stackPop(stack); //check if is null
-	here:
-	stackDel(stack);
-	printf("Deleted a stack\n");
-	printf("-------------------------------");
+		currentNode=stackPop(stack); // Check it is NULL
+		here:
+		stackDel(stack);
 }
+
