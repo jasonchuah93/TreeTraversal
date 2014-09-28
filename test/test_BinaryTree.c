@@ -21,6 +21,7 @@ void test_binary_tree_with_1_node(void){
 	printf("Starts test_binary_tree_with_1_node\n");
 	stackNew_ExpectAndReturn(&stack);
 	display_Expect(6);
+	stackPop_ExpectAndReturn(&stack,NULL);
 	stackDel_Expect(&stack);
 	
 	binaryTreeTraverseInOrder(&root);
@@ -98,7 +99,7 @@ void test_binary_tree_with_3_nodes_parent_and_left_child_and_right_child(void){
 	stackPush_Expect(&stack,&root); 
 	display_Expect(20);
 	stackPop_ExpectAndReturn(&stack,&root);
-	stackPop_ExpectAndReturn(&stack,&root);
+	stackPop_ExpectAndReturn(&stack,NULL);
 	stackDel_Expect(&stack);
 	
 	binaryTreeTraverseInOrder(&root);
@@ -125,13 +126,13 @@ void test_binary_tree_with_3_nodes_parent_and_left_child_and_below(void){
 	stackPush_Expect(&stack,&root); //push 10 
 	stackPush_Expect(&stack,&leftChild2); //push 5 
 	display_Expect(1);
-	//stackPop_ExpectAndReturn(&stack,&leftChild2); // pop 5
-	//display_Expect(5);
-	//stackPop_ExpectAndReturn(&stack,&root); // pop 10
-	//display_Expect(10);
-	//stackPop_ExpectAndReturn(&stack,NULL);
+	stackPop_ExpectAndReturn(&stack,&leftChild2); // pop 5
+	display_Expect(5);
+	stackPop_ExpectAndReturn(&stack,&root); // pop 10
+	display_Expect(10);
+	stackPop_ExpectAndReturn(&stack,NULL);
 	
-	//stackDel_Expect(&stack);
+	stackDel_Expect(&stack);
 	
 	binaryTreeTraverseInOrder(&root);
 }
@@ -144,7 +145,7 @@ void test_binary_tree_with_3_nodes_parent_and_left_child_and_below(void){
  * 1 7
 **/
 
-void xtest_binary_tree_with_4_nodes_parent_and_left_child_and_below(void){
+void test_binary_tree_with_4_nodes_parent_and_left_child_and_below(void){
 	Node rightChild = {NULL,NULL,7};
 	Node leftChild = {NULL,NULL,1};
 	Node leftChild2	= {&leftChild,&rightChild,5};
@@ -159,10 +160,10 @@ void xtest_binary_tree_with_4_nodes_parent_and_left_child_and_below(void){
 	stackPush_Expect(&stack,&leftChild2); //push 5 
 	display_Expect(1);
 	stackPop_ExpectAndReturn(&stack,&leftChild2); // pop 5
-	stackPush_Expect(&stack,&leftChild2); //push 5 
 	display_Expect(5);
-	stackPop_ExpectAndReturn(&stack,&leftChild2); // pop 5
+	stackPush_Expect(&stack,&leftChild2); //push 5 
 	display_Expect(7);
+	stackPop_ExpectAndReturn(&stack,&leftChild2); // pop 5
 	stackPop_ExpectAndReturn(&stack,&root); // pop 10
 	display_Expect(10);
 	stackPop_ExpectAndReturn(&stack,NULL);
