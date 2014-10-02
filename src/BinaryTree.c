@@ -44,8 +44,7 @@ void binaryTreeTraverseInOrder(Node *currentNode){
 				currentNode->state=ENTERED_NODE;
 			}
 		}else if(currentNode->state==VISITED_RIGHT_NODE){
-			currentNode=stackPop(stack);
-			if(currentNode==NULL){
+			if((currentNode=stackPop(stack))==NULL){
 				break;
 			}else{
 				if(currentNode->state==ENTERED_NODE){
