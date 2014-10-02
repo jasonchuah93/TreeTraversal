@@ -25,84 +25,44 @@ void binaryTreeTraverseInOrder(Node *currentNode){
 		if(currentNode->state==ENTERED_NODE){
 			if(currentNode->left==NULL && currentNode->right==NULL){
 				display(currentNode->data);
-				break;
+				currentNode->state=VISITED_RIGHT_NODE;
 			}else if(currentNode->left!=NULL){
 				stackPush(stack,currentNode);
 				currentNode=currentNode->left;
 				currentNode->state=ENTERED_NODE;
-			}else if(currentNode->right!=NULL){
+			}else{
+				currentNode->state=VISITED_LEFT_NODE;
+			}
+		}else if(currentNode->state==VISITED_LEFT_NODE){
+			if(currentNode->right==NULL){
+				display(currentNode->data);
+				changeNodeState(currentNode);
+			}else{
 				display(currentNode->data);
 				stackPush(stack,currentNode);
 				currentNode=currentNode->right;
 				currentNode->state=ENTERED_NODE;
 			}
-		}
-	}
-	while(1){
-		if((currentNode=stackPop(stack))==NULL){
-			break;
-		}else{
-			if(currentNode->left!=NULL){
-				changeNodeState(currentNode);
-			}
-		}
-		if(currentNode->state==VISITED_LEFT_NODE){
-			printf("here display 10 \n");
-			display(currentNode->data);
-			if(currentNode->right!=NULL){
-				stackPush(stack,currentNode);
-				currentNode=currentNode->right;
-				display(currentNode->data);
+		}else if(currentNode->state==VISITED_RIGHT_NODE){
+			currentNode=stackPop(stack);
+			if(currentNode==NULL){
+				break;
+			}else{
+				if(currentNode->state==ENTERED_NODE){
+					changeNodeState(currentNode);
+				}else if(currentNode->state==VISITED_LEFT_NODE){
+					changeNodeState(currentNode);
+				}
 			}
 		}
 	}
 	stackDel(stack);
 }
 
-/*
-while(1){
-		if(currentNode->left == NULL && currentNode->right == NULL){
-			currentNode->state=ENTERED_NODE;
-			display(currentNode->data);
-			goto here;
-		}else if(currentNode->left!=NULL){
-			currentNode->state=ENTERED_NODE;
-			stackPush(stack,currentNode);
-			currentNode=currentNode->left;
-			currentNode->state=ENTERED_NODE;
-			if(currentNode->left == NULL && currentNode->right == NULL){
-				display(currentNode->data);
-				currentNode=stackPop(stack);
-				display(currentNode->data);
-				//changeNodeState(currentNode);
-			}
-		}else if(currentNode->right!=NULL){
-			currentNode->state=ENTERED_NODE;
-			display(currentNode->data);
-			stackPush(stack,currentNode);
-			currentNode=currentNode->right;
-			currentNode->state=ENTERED_NODE;
-			display(currentNode->data);
-			currentNode=stackPop(stack);
-			currentNode->state=VISITED_RIGHT_NODE;
-		}
-		if(currentNode->state==VISITED_LEFT_NODE){
-			if(currentNode->right!=NULL){
-				stackPush(stack,currentNode);
-				currentNode=currentNode->right;
-				currentNode->state=ENTERED_NODE;
-				display(currentNode->data);
-				currentNode=stackPop(stack);
-			}else{
-				break;
-			}
-		}
-		
-		if(currentNode->state==VISITED_RIGHT_NODE || currentNode->state==VISITED_LEFT_NODE){
-			break;
-		}
+void binaryTreePrintInOrder(Node *node){
+	if(node!=NULL){
+		binaryTreePrintInOrder(node->left);
+		printf("Node : %d\n",node->data);
+		binaryTreePrintInOrder(node->right);
 	}
-		currentNode=stackPop(stack); // Check it is NULL
-		
-		stackDel(stack);
-*/
+}
